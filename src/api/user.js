@@ -8,9 +8,15 @@
          data
      })
  }
+ /* 
+ 获取用户资料接口
 
- export function getInfo(token) {
-
+ */
+ export function getUserInfo() {
+     return request({
+         url: '/sys/profile',
+         method: 'post'
+     })
  }
 
  export function logout() {
