@@ -45,6 +45,13 @@ const actions = {
         context.commit('setUserInfo', baseResult)
         return result
     },
+    // 登出的action
+    logout(context) {
+        // 删除token
+        context.commit('removeToken')
+            // 删除用户资料
+        context.commit('removeUserInfo')
+    }
 
 }
 export default {
