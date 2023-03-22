@@ -11,22 +11,15 @@ import '@/styles/index.scss' // global css 全局样式
 import App from './App'
 import store from './store'
 import router from './router'
-
+import * as directives from '@/directives'
 import '@/icons' // icon
 import '@/permission' // permission control
 
-/**
- * If you don't want to use mock-server
- * you want to use MockJs for mock api
- * you can execute: mockXHR()
- *
- * Currently MockJs will be used in the production environment,
- * please remove it before going online ! ! !
- */
-// if (process.env.NODE_ENV === 'production') {
-//   const { mockXHR } = require('../mock')
-//   mockXHR()
-// }
+// 注册自定义指令
+// 遍历所有的导出的指令对象 完成自定义全局注册
+Object.keys(directives).forEach(key => {
+    Vue.directive(key, directives[key])
+})
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
