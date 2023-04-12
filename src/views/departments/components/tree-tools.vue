@@ -45,7 +45,8 @@ export default {
   methods: {
     operateDepts(type) {
       if (type === 'add') {
-
+       // 告诉父组件 显示弹层
+       this.$emit('addDepts', this.treeNode)
       } else if (type === 'edit') {
 
       } else {
