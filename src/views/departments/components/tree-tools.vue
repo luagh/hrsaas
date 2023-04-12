@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import { delDepartments } from '@/api/departments'
 // 该组件需要对外开放属性 外部需要提供一个对象 对象里需要有name  manager
 export default {
   props: {
@@ -48,7 +49,15 @@ export default {
       } else if (type === 'edit') {
 
       } else {
-        console.log('ss');
+        //  删除操作
+        this.$confirm('确定要删除该部门吗').then(() => {
+          // 如果点击了确定就会进入then
+          return delDepartments(this.treeNode.id) // 返回promise对象
+        }).then(() => {
+          //  如果删除成功了  就会进入这里
+          this.$emit('delDepts') // 触发自定义事件
+          this.$message.success('删除部门成功')
+        })
       }
     }
   }
