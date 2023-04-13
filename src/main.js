@@ -7,7 +7,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
 import '@/styles/index.scss' // global css 全局样式
-
+import Component from '@/components'
 import App from './App'
 import store from './store'
 import router from './router'
@@ -27,7 +27,7 @@ Vue.use(ElementUI, { locale })
     // Vue.use(ElementUI)
 
 Vue.config.productionTip = false
-
+Vue.use(Component)
 new Vue({
     el: '#app',
     router,
