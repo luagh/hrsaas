@@ -11,13 +11,15 @@
           <!-- 说明el-tree里面的这个内容 就是插槽内容 => 填坑内容  => 有多少个节点循环多少次 -->
           <!-- scope-scope 是 tree组件传给每个节点的插槽的内容的数据 -->
           <!-- 顺序一定是 执行slot-scope的赋值 才去执行 props的传值 -->
-          <tree-tools slot-scope="{ data }" :tree-node="data"
-          @delDepts="getDepartments" @addDepts="addDepts"  />
+          <tree-tools slot-scope="{data}" :tree-node="data"
+          @delDepts="getDepartments" @addDepts="addDepts"
+           @editDepts="editDepts" />
         </el-tree>
       </el-card>
 
     </div>
-    <add-dept :show-dialog="showDialog" ></add-dept>
+    <add-dept ref="addDept" :show-dialog.sync="showDialog" :tree-node="node"
+    @addDepts="getDepartments"  ></add-dept>
   </div>
 </template>
 
@@ -38,7 +40,8 @@ export default {
       defaultProps: {
         label: 'name' // 表示 从这个属性显示内容
       },
-      showDialog: false // 显示窗体
+      showDialog: false,// 显示窗体
+      node:null
     }
   },
   created() {
@@ -47,14 +50,21 @@ export default {
   methods: {
     async getDepartments() {
       const result = await getDepartments()
-      this.company = { name: result.companyName, manager: '负责人' }
+      this.company = { name: result.companyName, manager: '负责人',id:'' }
       // 这里定义一个空串  因为 它是根 所有的子节点的数据pid 都是 ""
       this.departs = tranListToTreeData(result.depts, '')
     },
+
     addDepts(node){
       this.showDialog = true // 显示弹层
       // 因为node是当前的点击的部门， 此时这个部门应该记录下来,
       this.node = node
+    },
+    editDepts(node){
+    // 首先打开弹层
+    this.showDialog = true
+      this.node = node
+      this.$refs.addDept.getDepartDetail(node.id) // 直接调用子组件中的方法 传入一个id
     }
   }
 }
