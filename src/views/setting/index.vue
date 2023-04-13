@@ -11,6 +11,7 @@
                 icon="el-icon-plus"
                 size="small"
                 type="primary"
+                @click="showDialog = true"
               >新增角色</el-button>
             </el-row>
             <!-- 表格 -->
@@ -21,7 +22,7 @@
               <el-table-column align="center"  label="操作">
               <template slot-scope="{row}">
                 <el-button size="small" type="success">分配权限</el-button>
-                <el-button size="small" type="primary">编辑</el-button>
+                <el-button size="small" type="primary" @click="editRole(row.id)" >编辑</el-button>
                 <el-button size="small" type="danger" @click="deleteRole(row.id)">删除</el-button>
               </template>
               </el-table-column>
@@ -64,11 +65,28 @@
         </el-tabs>
       </el-card>
     </div>
+    <el-dialog title="编辑弹层" :visible="showDialog" @close="btnCancel">
+      <el-form ref="roleForm" :model="roleForm" :rules="rules" label-width="120px">
+        <el-form-item label="角色名称" prop="name">
+          <el-input v-model="roleForm.name" />
+        </el-form-item>
+        <el-form-item label="角色描述">
+          <el-input v-model="roleForm.description" />
+        </el-form-item>
+      </el-form>
+      <!-- 底部 -->
+      <el-row slot="footer" type="flex" justify="center">
+        <el-col :span="6">
+          <el-button size="small" @click="btnCancel">取消</el-button>
+          <el-button size="small" type="primary" @click="btnOK">确定</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {getRoleList,getCompanyInfo,deleteRole} from '@/api/setting'
+import {getRoleList,getCompanyInfo,deleteRole, getRoleDetail, updateRole, addRole} from '@/api/setting'
 import {mapGetters} from 'vuex'
 
 export default {
@@ -83,7 +101,14 @@ export default {
       },
       formData:{
 
-      }
+      },
+      showDialog: false,
+       // 专门接收新增或者编辑的编辑的表单数据
+       roleForm: {},
+      rules: {
+        name: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }]
+      },
+
   }
  },
  computed:{
@@ -119,6 +144,37 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    async editRole(id){
+      //先获取数据 再弹出层
+      this.roleForm =await getRoleDetail(id)
+      this.showDialog =true
+    },
+    async btnOK(){
+      try {
+        await this.$refs.roleForm.validate()
+        if(this.roleForm.id){
+          await updateRole(this.roleForm)
+        }else{
+           // 新增业务
+           await addRole(this.roleForm)
+        }
+        // 重新拉取数据
+        this.getRoleList()
+        this.$message.success('操作成功')
+        this.showDialog = false
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    btnCancel(){
+        this.roleForm ={
+          name:'',
+          description:''
+        }
+
+        this.$refs.roleForm.resetFields()
+        this.showDialog =false
     }
  }
 }
