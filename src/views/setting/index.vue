@@ -19,9 +19,11 @@
               <el-table-column align="center" prop="name" label="角色名称" width="240" />
               <el-table-column align="center" prop="description" label="描述" />
               <el-table-column align="center"  label="操作">
+              <template slot-scope="{row}">
                 <el-button size="small" type="success">分配权限</el-button>
                 <el-button size="small" type="primary">编辑</el-button>
-                <el-button size="small" type="danger">删除</el-button>
+                <el-button size="small" type="danger" @click="deleteRole(row.id)">删除</el-button>
+              </template>
               </el-table-column>
             </el-table>
              <!-- 放置分页组件 -->
@@ -66,7 +68,7 @@
 </template>
 
 <script>
-import {getRoleList,getCompanyInfo} from '@/api/setting'
+import {getRoleList,getCompanyInfo,deleteRole} from '@/api/setting'
 import {mapGetters} from 'vuex'
 
 export default {
@@ -105,6 +107,18 @@ export default {
       // newPage是当前点击的页码
       this.page.page = newPage // 将当前页码赋值给当前的最新页码
       this.getRoleList()
+    },
+    async deleteRole(id) {
+      //  提示
+      try {
+        await this.$confirm('确认删除该角色吗')
+        // 只有点击了确定 才能进入到下方
+        await deleteRole(id) // 调用删除接口
+        this.getRoleList() // 重新加载数据
+        this.$message.success('删除角色成功')
+      } catch (error) {
+        console.log(error)
+      }
     }
  }
 }
