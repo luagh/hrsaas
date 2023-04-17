@@ -57,7 +57,7 @@
               <el-button
                 type="text"
                 size="small"
-                @click="$router.push(`/employees/detail/${obj.row.id}`)"
+                @click="$router.push(`/employees/detail/${row.id}`)"
                 >查看</el-button
               >
               <el-button type="text" size="small">转正</el-button>
