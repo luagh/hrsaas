@@ -30,6 +30,7 @@
           <el-table-column label="头像" align="center">
             <template slot-scope="{ row }">
               <img
+                @click="showQrCode(row.staffPhoto)"
                 slot="reference"
                 v-imageerror="require('@/assets/common/bigUserHeader.png')"
                 :src="row.staffPhoto"
@@ -107,6 +108,16 @@
       </el-card>
     </div>
     <AddEmployee :show-dialog.sync="showDialog"></AddEmployee>
+    <el-dialog
+      title="二维码"
+      :visible.sync="showCodeDialog"
+      @opened="showQrCode"
+      @close="imgUrl = ''"
+    >
+      <el-row type="flex" justify="center">
+        <canvas ref="myCanvas" />
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -115,13 +126,14 @@ import { getEmployeeList, delEmployee } from "@/api/employees";
 import EmployeeEnum from "@/api/constant/employees";
 import AddEmployee from "./components/add-employee.vue";
 import { formatDate } from "@/filters";
-
+import QrCode from "qrcode";
 export default {
   components: { AddEmployee },
   data() {
     return {
       showDialog: false,
       loading: false,
+      showCodeDialog: false,
       list: [], // 接数据的
       page: {
         page: 1, // 当前页码
@@ -217,8 +229,19 @@ export default {
         });
         // ["132", '张三’， ‘’，‘’，‘’d]
       });
-      // return rows.map(item => Object.keys(headers).map(key => item[headers[key]]))
-      // 需要处理时间格式问题
+    },
+    showQrCode(url) {
+      // url存在的情况下 才弹出层
+      if (url) {
+        this.showCodeDialog = true; // 数据更新了 但是我的弹层会立刻出现吗 ？页面的渲染是异步的！！！！
+        // 有一个方法可以在上一次数据更新完毕，页面渲染完毕之后
+        this.$nextTick(() => {
+          // 此时可以确认已经有ref对象了
+          QrCode.toCanvas(this.$refs.myCanvas, url); // 将地址转化成二维码
+        });
+      } else {
+        this.$message.warning("该用户还未上传头像");
+      }
     },
   },
 };
