@@ -13,6 +13,7 @@ import store from './store'
 import router from './router'
 import * as directives from '@/directives'
 import * as filters from '@/filters' // 引入工具类
+import CheckPermission from '@/mixin/checkPermission'
 import '@/icons' // icon
 import '@/permission' // permission control
 
@@ -22,14 +23,14 @@ Object.keys(directives).forEach(key => {
     Vue.directive(key, directives[key])
 })
 Object.keys(filters).forEach(key => {
-        // 注册过滤器
-        Vue.filter(key, filters[key])
-    })
-    // set ElementUI lang to EN
+    // 注册过滤器
+    Vue.filter(key, filters[key])
+})
+// set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
-    // 如果想要中文版 element-ui，按如下方式声明
-    // Vue.use(ElementUI)
-
+// 如果想要中文版 element-ui，按如下方式声明
+// Vue.use(ElementUI)
+Vue.mixin(CheckPermission)
 Vue.config.productionTip = false
 Vue.use(Component)
 new Vue({

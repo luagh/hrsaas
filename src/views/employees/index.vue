@@ -14,6 +14,7 @@
             >导出</el-button
           >
           <el-button
+            :disabled="!checkPermission('POINT-USER-UPDATE')"
             icon="plus"
             type="primary"
             size="small"
