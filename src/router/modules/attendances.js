@@ -1,18 +1,37 @@
-import Layout from '@/layout'
-// 路由规则
-export default {
-    path: '/attendances', //路由地址
-    name: 'attendances',
-    component: Layout,
-    // 配置二级路的路由表
-    children: [{
 
-        path: '',
-        component: () =>
-            import ('@/views/attendances'),
-        meta: {
-            title: '考勤',
-            icon: 'skill'
-        }
-    }]
+import Layout from '@/layout'
+
+const attendRouter = {
+  path: '/attendances',
+  component: Layout,
+  name: 'attendances',
+  children: [
+    {
+      path: '',
+      component: () => import('@/views/attendances'),
+      name: 'attendances',
+      meta: {
+        title: '考勤',
+        icon: 'excel' }
+    },
+    {
+      path: 'archiving',
+      component: () => import('@/views/attendances/historical'),
+      name: 'archiving',
+      hidden: true,
+      meta: {
+        title: '归档'
+      }
+    },
+    {
+      path: 'report/:month',
+      component: () => import('@/views/attendances/report'),
+      name: 'reports',
+      hidden: true,
+      meta: {
+        title: '报表'
+      }
+    }
+  ]
 }
+export default attendRouter
