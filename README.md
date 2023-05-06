@@ -1,6 +1,6 @@
 # Vue2.0
 
-商城后台前端系统vue3+Element Plus +Tailwind CSS
+商城后台前端系统vue2+Element Plus 
 
 ## 项目线上地址
 http://localhost:8888/hr/login
